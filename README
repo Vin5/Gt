@@ -1,0 +1,9 @@
+ The goal of this script is to reduce git commands redundancy.
+ Git requirement to write a full command might be a little annoying,
+ so this script allows you to write just a few first letters of a Git command.
+ For example:
+   $ gt st   
+ which will mean: git status.
+ It's not an analog of Git aliases, it's just a commands shortener.
+ If script has a several assumptions of a command it will ask user
+ to help to resolve the ambiguity.
