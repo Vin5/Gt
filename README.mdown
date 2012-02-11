@@ -12,6 +12,7 @@ If script has a several assumptions of a command it will ask user
 to help to resolve the ambiguity.
 
 For example:
+
     $ gt s
     What did you mean?
     1) show
