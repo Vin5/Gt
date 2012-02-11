@@ -123,7 +123,7 @@ def GenerateShellCommand(params):
 if __name__=="__main__":
     try:
         shell_command = GenerateShellCommand(sys.argv[1:])
-        subprocess.Popen(shell_command,shell=False)
+        subprocess.Popen(shell_command,shell=False).wait()
     except OSError, e:
         print >>os.stderr, "Git execution failed ", e
     except KeyboardInterrupt, e:

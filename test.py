@@ -33,10 +33,10 @@ class TestGtFunctions(unittest.TestCase):
         testSequance = zip(self._TEST_COMMAND_STRINGS,self._CONTROL_COMMAND_STRINGS,)
         # test generated shell command and control shell command
         for test_command, control_command in testSequance:
-            self.assertEqual(gt.GenerateShellCommand(test_command.split()),'git '+control_command)
+            self.assertEqual(gt.GenerateShellCommand(test_command.split()),['git']+control_command.split())
         
-        self.assertEqual(gt.GenerateShellCommand([]),'git')
-        self.assertEqual(gt.GenerateShellCommand(['--version']),'git --version')
+        self.assertEqual(gt.GenerateShellCommand([]),['git'])
+        self.assertEqual(gt.GenerateShellCommand(['--version']),['git','--version'])
 
     def test_ResolveAmbiguity(self):
         self.assertEqual(
