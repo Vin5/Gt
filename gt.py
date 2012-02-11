@@ -42,14 +42,30 @@ _GIT_COMMANDS = frozenset( ['add','archive',
                                         'tag'])
 
 def RequestUserInput(suitable_git_commands):
-    print "What did you mean?\n"
-    for i, command in enumerate(suitable_git_commands):
-        print "" + str( i+1 ) + ") " + command
-    print "Enter (number or full command name): "
-    return raw_input()
-    
-def ResolveAmbiguity(suitable_git_commands):
-    userinput = RequestUserInput(suitable_git_commands)
+        """ Prints git commands and asks user to input 
+            either number of git command or 
+            full command to resolve ambiguity
+            
+            Returns: 
+                user inputed data
+        """
+        print "What did you mean?\n"
+        for i, command in enumerate(suitable_git_commands):
+            print "" + str( i+1 ) + ") " + command
+        print "Enter (number or full command name): "
+        return raw_input()
+        
+def ResolveAmbiguity(suitable_git_commands, ask_user):
+    """
+        Tries to find an apropriate git command in 
+        case of ambiguity.
+        
+        Params:
+            suitable_git_commands - possible commands
+            ask_user - function that asks user to specify command
+        
+    """
+    userinput = ask_user(suitable_git_commands)
     selected_command=''
     #TODO: Error handling
     if(userinput.isdigit()):
@@ -62,17 +78,24 @@ def ResolveAmbiguity(suitable_git_commands):
     return  selected_command
 
 def SuggestCommand(suitable_git_commands):
+    """
+        Decides which command in suitable_git_commands is more appropriate
+    """
     length = len(suitable_git_commands)
     if length == 1:
         return suitable_git_commands[0]
     if length > 1:
-        return ResolveAmbiguity(suitable_git_commands)
+        return ResolveAmbiguity(suitable_git_commands, RequestUserInput)
     return ''
 
 def StartsWithLikeness( gitcommand, command ):
     return gitcommand.startswith(command)
 
 def GenerateSuitableGitCommands(command, likeness_function):
+    """ 
+        Based on likeness_function result generates a list of Git commands
+        which is similar to command param
+    """
     return [ gitcommand  for gitcommand in _GIT_COMMANDS if likeness_function(gitcommand, command)]
 
 def TransformParams(params):
@@ -95,12 +118,12 @@ def GenerateShellCommand(params):
     git_executable = _GIT_EXECUTABLE
     if(len(params)):
         params = TransformParams(params)
-    return " ".join(git_executable+params)
+    return git_executable+params
     
 if __name__=="__main__":
     try:
         shell_command = GenerateShellCommand(sys.argv[1:])
-        subprocess.call(shell_command,shell=True)
+        subprocess.Popen(shell_command,shell=False)
     except OSError, e:
         print >>os.stderr, "Git execution failed ", e
     except KeyboardInterrupt, e:
