@@ -27,9 +27,9 @@ import subprocess
 _GIT_EXECUTABLE = ['git']
 
 # The most commonly usable Git commands, you can extend it with your favourite commands
-_GIT_COMMANDS = frozenset( ['add','archive',
+_GIT_COMMANDS = frozenset( ['add', 'am', 'apply','archive', 
                                         'bisect','branch','blame','bundle',
-                                        'checkout','cherry-pick','citool','clone','commit','config',
+                                        'checkout','cherry-pick','clone', 'clean','commit','config',
                                         'diff','describe',
                                         'fetch',
                                         'grep',
@@ -37,8 +37,8 @@ _GIT_COMMANDS = frozenset( ['add','archive',
                                         'log',
                                         'merge','mv',
                                         'pull','push',
-                                        'rebase','reset','rm',
-                                        'show','status','submodule',
+                                        'rebase','reset','rm', 'remote',
+                                        'show','status', 'stash','submodule',
                                         'tag'])
 
 def RequestUserInput(suitable_git_commands):
