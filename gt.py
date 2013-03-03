@@ -92,6 +92,11 @@ def StartsWithLikeness( gitcommand, command ):
     return gitcommand.startswith(command)
 
 def ContentLikeness (gitcommand, command):
+    """
+        Returns True when all characters contained in command 
+        is also contained in gitcommand in the same order.
+        Otherwise returns False.
+    """
     start = 0
     end = len(gitcommand)
     for c in command:
@@ -110,6 +115,10 @@ def GenerateSuitableGitCommands(command, likeness_function):
     return [ gitcommand  for gitcommand in _GIT_COMMANDS if likeness_function(gitcommand, command)]
 
 def AdaptiveGeneration(command):
+    """
+        Generates suitable git command list 
+        using StartsWithLikeness and ContentLikeness functions.
+    """
     startsWithLikenessList = GenerateSuitableGitCommands(command, StartsWithLikeness)
     contentLikenessList = GenerateSuitableGitCommands(command, ContentLikeness)
     adaptiveIntersection = [val for val in contentLikenessList if val in startsWithLikenessList]
@@ -137,12 +146,12 @@ def GenerateShellCommand(params):
     git_executable = _GIT_EXECUTABLE
     if(len(params)):
         params = TransformParams(params)
-    return git_executable+params
+    return git_executable + params
     
 if __name__=="__main__":
     try:
         shell_command = GenerateShellCommand(sys.argv[1:])
-        subprocess.Popen(shell_command,shell=False).wait()
+        subprocess.Popen(shell_command, shell=False).wait()
     except OSError, e:
         print >>os.stderr, "Git execution failed ", e
     except KeyboardInterrupt, e:
