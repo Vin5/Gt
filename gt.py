@@ -91,12 +91,31 @@ def SuggestCommand(suitable_git_commands):
 def StartsWithLikeness( gitcommand, command ):
     return gitcommand.startswith(command)
 
+def ContentLikeness (gitcommand, command):
+    start = 0
+    end = len(gitcommand)
+    for c in command:
+        start = gitcommand.find(c, start, end)
+        if start == -1:
+            return False
+        start = start + 1
+    return True
+
+
 def GenerateSuitableGitCommands(command, likeness_function):
     """ 
         Based on likeness_function result generates a list of Git commands
         which is similar to command param
     """
     return [ gitcommand  for gitcommand in _GIT_COMMANDS if likeness_function(gitcommand, command)]
+
+def AdaptiveGeneration(command):
+    startsWithLikenessList = GenerateSuitableGitCommands(command, StartsWithLikeness)
+    contentLikenessList = GenerateSuitableGitCommands(command, ContentLikeness)
+    adaptiveIntersection = [val for val in contentLikenessList if val in startsWithLikenessList]
+    if len(adaptiveIntersection) == 0:
+        return contentLikenessList
+    return adaptiveIntersection
 
 def TransformParams(params):
     # Function expects that the first param is a Git command.
@@ -108,7 +127,7 @@ def TransformParams(params):
     # if appropriate command is not found, params are returned
     # without any modifications
     command = params[0]
-    suitable_commands = GenerateSuitableGitCommands(command, StartsWithLikeness)
+    suitable_commands = AdaptiveGeneration(command)
     suggested_command = SuggestCommand(suitable_commands)
     if len(suggested_command):
         params[0] = suggested_command
